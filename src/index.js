@@ -27,10 +27,11 @@ function checksCreateTodosUserAvailability(request, response, next) {
   const { user } = request;
 
   if (user.todos.length < 10 || user.pro ) {
+    request.user = user;
     return next();
   }
 
-  return response.status(403);
+  return response.status(403).json({ error: 'Update to premium'});
 }
 
 function checksTodoExists(request, response, next) {
@@ -44,13 +45,13 @@ function checksTodoExists(request, response, next) {
   }
 
   if (!validate(id)) {
-    return response.status(400);
+    return response.status(400).json({ error: 'id invalidy!'});;
   }
 
   const todo = user.todos.find((todo) => todo.id === id);
   
   if (!todo) {
-    return response.status(404)
+    return response.status(404).json({ error: 'todo not found!'})
   }
 
   request.user = user;
